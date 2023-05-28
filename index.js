@@ -33,6 +33,7 @@ async function run() {
     const database = client.db('my_classroom');
     const userCollection = database.collection('users')
     const classroomCollection = database.collection('classrooms')
+    const postCollection = database.collection('posts')
 
     app.get('/', async (req, res) => {
       res.send('Server is running')
@@ -43,11 +44,20 @@ async function run() {
       const result = await userCollection.insertOne(user)
       res.send(result)
     })
-    app.put('/users/:email', async (req, res) => {
-      const { email } = req.params;
+    app.post('/posts', async (req, res) => {
+      const post = req.body;
+      const result = await postCollection.insertOne(post)
+      res.send(result)
+    })
+    app.get('/posts', async (req, res) => {
+      const result = await postCollection.find({}).toArray()
+      res.json(result)
+    })
+    app.put('/users/:uid', async (req, res) => {
+      const { uid } = req.params;
       const id = req.body.id;
-      const filter = { email: email }
-      const updateQuery = { $addToSet: { joinedClassroomList: id } };
+      const filter = { uid: uid }
+      const updateQuery = { $addToSet: { classroomList: id } };
       const option = { upsert: true }
 
       // Perform the update operation
@@ -56,34 +66,26 @@ async function run() {
     })
     app.put('/classrooms/:id([0-9a-fA-F]{24})', async (req, res) => {
       const { id } = req.params;
-      const email = req.body.email;
+      const userInfo = req.body;
       const objectId = new ObjectId(id);
       const filter = { _id: objectId };
-      const updateQuery = { $addToSet: { students: email } };
+      const updateQuery = { $addToSet: { students: userInfo } };
       const option = { upsert: true }
-
       // Perform the update operation
       const result = await classroomCollection.updateOne(filter, updateQuery, option);
       res.send(result)
     })
     app.get('/classrooms/:id([0-9a-fA-F]{24})', async (req, res) => {
       const id = req.params.id;
-      if (id) {
-        const objectId =new ObjectId(id);
-        const query = { _id: objectId };
-        const cursor = await classroomCollection.findOne(query);
-        res.json(cursor)
-      }
-      else {
-        const cursor = await classroomCollection.find({}).toArray()
-        res.json(cursor)
-      }
+      const objectId = new ObjectId(id);
+      const query = { _id: objectId };
+      const cursor = await classroomCollection.findOne(query);
+      res.json(cursor)
     })
-    app.get('/classrooms/:email', async (req, res) => {
-      const email = req.params.email;
-      const filter = { userEmail: email }
+    app.get('/classrooms/:uid', async (req, res) => {
+      const uid = req.params.uid;
+      const filter = { uid: uid }
       const cursor = await classroomCollection.find(filter).toArray()
-      console.log(cursor)
       res.json(cursor)
     })
     app.get('/classrooms', async (req, res) => {
@@ -91,10 +93,9 @@ async function run() {
       res.json(cursor)
     })
 
-    app.get('/users/:email', async (req, res) => {
-      const email = req.params.email;
-      const query = { email: email }
-      console.log(query)
+    app.get('/users/:uid', async (req, res) => {
+      const uid = req.params.uid;
+      const query = { uid: uid }
       const cursor = await userCollection.findOne(query);
       res.json(cursor)
     })
