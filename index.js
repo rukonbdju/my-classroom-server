@@ -38,6 +38,11 @@ async function run() {
     app.get('/', async (req, res) => {
       res.send('Server is running')
     });
+    
+    app.get('/users', async (req, res) => {
+      const result= await userCollection.find({}).toArray();
+      res.send(result)
+    });
 
     app.post('/users', async (req, res) => {
       const user = req.body;
@@ -75,6 +80,7 @@ async function run() {
       const result = await classroomCollection.updateOne(filter, updateQuery, option);
       res.send(result)
     })
+    
     app.get('/classrooms/:id([0-9a-fA-F]{24})', async (req, res) => {
       const id = req.params.id;
       const objectId = new ObjectId(id);
@@ -82,21 +88,22 @@ async function run() {
       const cursor = await classroomCollection.findOne(query);
       res.json(cursor)
     })
-    app.get('/classrooms/:uid', async (req, res) => {
+    app.get('/users/:uid', async (req, res) => {
       const uid = req.params.uid;
-      const filter = { uid: uid }
-      const cursor = await classroomCollection.find(filter).toArray()
+      const query = { uid: uid }
+      const cursor = await userCollection.findOne(query);
       res.json(cursor)
     })
+    
     app.get('/classrooms', async (req, res) => {
       const cursor = await classroomCollection.find({}).toArray()
       res.json(cursor)
     })
 
-    app.get('/users/:uid', async (req, res) => {
+    app.get('/classrooms/:uid', async (req, res) => {
       const uid = req.params.uid;
-      const query = { uid: uid }
-      const cursor = await userCollection.findOne(query);
+      const filter = { uid: uid }
+      const cursor = await classroomCollection.find(filter).toArray()
       res.json(cursor)
     })
     app.post('/classrooms', async (req, res) => {
