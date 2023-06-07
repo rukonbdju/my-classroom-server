@@ -38,9 +38,9 @@ async function run() {
     app.get('/', async (req, res) => {
       res.send('Server is running')
     });
-    
+
     app.get('/users', async (req, res) => {
-      const result= await userCollection.find({}).toArray();
+      const result = await userCollection.find({}).toArray();
       res.send(result)
     });
 
@@ -61,26 +61,37 @@ async function run() {
     app.put('/users/:uid', async (req, res) => {
       const { uid } = req.params;
       const id = req.body.id;
+      console.log({id,uid})
       const filter = { uid: uid }
       const updateQuery = { $addToSet: { classroomList: id } };
-      const option = { upsert: true }
+      const option = { upsert: false }
 
       // Perform the update operation
       const result = await userCollection.updateOne(filter, updateQuery, option);
       res.send(result)
     })
-    app.put('/classrooms/:id([0-9a-fA-F]{24})', async (req, res) => {
-      const { id } = req.params;
-      const userInfo = req.body;
-      const objectId = new ObjectId(id);
-      const filter = { _id: objectId };
-      const updateQuery = { $addToSet: { students: userInfo } };
-      const option = { upsert: true }
-      // Perform the update operation
-      const result = await classroomCollection.updateOne(filter, updateQuery, option);
-      res.send(result)
+    app.put('/classrooms/:code', async (req, res) => {
+      try {
+        const { code } = req.params;
+        const userInfo = req.body;
+        
+        const updateQuery = { $addToSet: { students: userInfo } };
+        const option={upsert:false}
+        // Perform the update operation
+        let result = await classroomCollection.updateOne({code}, updateQuery,option);
+        let document;
+        if(result){
+          document= await classroomCollection.findOne({code})
+          result.classroomId=document._id;
+        }
+        console.log(result)
+        res.json(result)
+      }catch{
+        error=>res.json(error)
+      }
+
     })
-    
+
     app.get('/classrooms/:id([0-9a-fA-F]{24})', async (req, res) => {
       const id = req.params.id;
       const objectId = new ObjectId(id);
@@ -94,7 +105,7 @@ async function run() {
       const cursor = await userCollection.findOne(query);
       res.json(cursor)
     })
-    
+
     app.get('/classrooms', async (req, res) => {
       const cursor = await classroomCollection.find({}).toArray()
       res.json(cursor)
@@ -108,8 +119,9 @@ async function run() {
     })
     app.post('/classrooms', async (req, res) => {
       const classroom = req.body
+      console.log(classroom)
       const randomCode = Math.floor(Math.random() * 9000) + 1000;
-      classroom.code = randomCode;
+      classroom.code = randomCode.toString();
       const result = await classroomCollection.insertOne(classroom)
       result.classCode = randomCode;
       res.send(result);
