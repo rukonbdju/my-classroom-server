@@ -14,6 +14,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+//routers
 app.use("/users",usersRouter)
 app.use("/classrooms",classroomsRouter)
 app.use("/posts",postsRouter)

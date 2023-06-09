@@ -19,9 +19,9 @@ classroomsRouter.get('/', async (req, res) => {
     res.json(cursor)
   })
 
-  classroomsRouter.put('/classrooms/:code', async (req, res) => {
-    try {
+  classroomsRouter.put('/:code', async (req, res) => {
       const { code } = req.params;
+      console.log(code)
       const userInfo = req.body;
       const updateQuery = { $addToSet: { students: userInfo } };
       const option={upsert:false}
@@ -33,9 +33,6 @@ classroomsRouter.get('/', async (req, res) => {
         result.classroomId=document._id;
       }
       res.json(result)
-    }catch{
-      error=>res.json(error)
-    }
 
   })
 

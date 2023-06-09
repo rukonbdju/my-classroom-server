@@ -31,6 +31,7 @@ usersRouter.put('/:uid', async (req, res) => {
     const option = { upsert: false }
     // Perform the update operation
     const result = await userCollection.updateOne(filter, updateQuery, option);
+    console.log(result)
     res.send(result)
 })
 
