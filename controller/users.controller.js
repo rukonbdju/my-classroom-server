@@ -15,7 +15,6 @@ module.exports.postUser = async (req, res) => {
 
 module.exports.getUserByUid = async (req, res) => {
     const { uid } = req.params;
-    console.log(uid)
     const filter = { firebaseId: uid };
     const result = await userCollection.findOne(filter);
     res.send(result)
@@ -23,8 +22,6 @@ module.exports.getUserByUid = async (req, res) => {
 
 module.exports.updateUserByClassId = async (req, res) => {
     const { uid } = req.params;
-    console.log({ uid })
-
     const id = req.body.id;
     const filter = { firebaseId: uid }
     const updateQuery = { $addToSet: { created: id } };
@@ -33,9 +30,9 @@ module.exports.updateUserByClassId = async (req, res) => {
     const result = await userCollection.updateOne(filter, updateQuery, option);
     res.send(result)
 }
- module.exports.updateUserByClassId = async (req, res) => {
+ module.exports.updateJoinedUserByClassId = async (req, res) => {
     const filter = { firebaseId: req.params.uid }
-    const updateQuery = { $addToSet: { joined: req.body.classId } };
+    const updateQuery = { $addToSet: { joined: req.body.id } };
     const option = { upsert: false }
     // Perform the update operation
     const result = await userCollection.updateOne(filter, updateQuery, option);

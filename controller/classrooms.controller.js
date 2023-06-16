@@ -32,6 +32,18 @@ module.exports.getClassroomById=async (req, res) => {
     res.json(cursor)
 }
 
+module.exports.updateClassroomPosts=async (req,res)=>{
+    const { id } = req.params;
+    const objectId = new ObjectId(id);
+    const filter = { _id: objectId };
+    const postId = req.body.postId;
+    const updateQuery = { $addToSet: { posts: postId } };
+    const option={upsert:false}
+    // Perform the update operation
+    let result = await classroomCollection.updateOne(filter, updateQuery,option);
+    res.json(result)
+}
+
 module.exports.updateClassroomByUserId=async (req, res) => {
     const { code } = req.params;
     const userInfo = req.body;
@@ -39,11 +51,7 @@ module.exports.updateClassroomByUserId=async (req, res) => {
     const option={upsert:false}
     // Perform the update operation
     let result = await classroomCollection.updateOne({code}, updateQuery,option);
-    let document;
-    if(result){
-      document= await classroomCollection.findOne({code})
-      result.classroomId=document._id;
-    }
+    const classroom=await classroomCollection.findOne({code})
+    result.classroomId=classroom._id
     res.json(result)
-
 }

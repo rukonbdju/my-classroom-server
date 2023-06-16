@@ -6,7 +6,7 @@ const postController = require("../../controller/posts.controller");
 postsRouter
 .route('/')
 .get(postController.getAllPosts)
-.post(postController.postUserPost)
+.post(postController.createUserPost)
 
 postsRouter
 .route('/query')
@@ -14,11 +14,18 @@ postsRouter
 
 postsRouter
 .route('/:id([0-9a-fA-F]{24})')
-.put(postController.addComments)
+.get(postController.getPostById)
 
 postsRouter
-.route('/likes')
-.put(postController.countPostLike)
+.route('/comment/:id([0-9a-fA-F]{24})')
+.put(postController.updatePostByComment)
+
+postsRouter
+.route('/like/:id([0-9a-fA-F]{24})')
+.put(postController.updatePostLike)
+
+postsRouter
+.route('/unlike/:id([0-9a-fA-F]{24})')
 .delete(postController.deletePostLike)
 
 module.exports=postsRouter;

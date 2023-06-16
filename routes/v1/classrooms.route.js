@@ -9,15 +9,18 @@ classroomsRouter
   .post(classroomsController.createClassroom)
 
 classroomsRouter
+  .route('/find/:uid')
+  .get(classroomsController.getClassroomsByUid)
+
+classroomsRouter
   .route('/:id([0-9a-fA-F]{24})')
   .get(classroomsController.getClassroomById)
+  .put(classroomsController.updateClassroomPosts)
 
 classroomsRouter
-  .route('/:code')
+  .route('/join/:code')
   .put(classroomsController.updateClassroomByUserId)
 
-classroomsRouter
-  .route('/:uid')
-  .get(classroomsController.getClassroomsByUid)
+
 
 module.exports = classroomsRouter;

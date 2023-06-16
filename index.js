@@ -7,6 +7,7 @@ dotenv.config()
 const usersRouter=require('./routes/v1/users.route')
 const classroomsRouter=require('./routes/v1/classrooms.route')
 const postsRouter = require('./routes/v1/posts.route')
+const commentRouter = require('./routes/v1/comments.route')
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.use(express.json());
 app.use("/api/v1/users",usersRouter)
 app.use("/api/v1/classrooms",classroomsRouter)
 app.use("/api/v1/posts",postsRouter)
+app.use("/api/v1/comments",commentRouter)
 
 
 const port = process.env.PORT || 3000;
