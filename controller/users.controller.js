@@ -17,7 +17,7 @@ module.exports.getUserByUid = async (req, res) => {
     const { uid } = req.params;
     const filter = { firebaseId: uid };
     const result = await userCollection.findOne(filter);
-    res.send(result)
+    res.json(result)
 }
 
 module.exports.updateUserByClassId = async (req, res) => {
