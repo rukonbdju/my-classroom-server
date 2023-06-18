@@ -3,7 +3,23 @@ const database = require("../utilities/dbConnect");
 const postCollection = database.collection('posts')
 
 module.exports.getAllPosts = async (req, res) => {
-    const result = await postCollection.find({}).toArray()
+
+    if (req.query.classId) {
+        const filter = { classId: req.query.classId }
+        const filteredResult = await postCollection.find(filter).toArray()
+        res.json(filteredResult.reverse())
+    }
+    else {
+        const result = await postCollection.find({}).toArray()
+        res.json(result.reverse())
+    }
+
+}
+
+module.exports.getPostsByClassId = async (req, res) => {
+    const { classId } = req.params;
+    const filter = { classId: classId }
+    const result = await postCollection.find(filter).toArray();
     res.json(result)
 }
 
@@ -36,35 +52,38 @@ module.exports.createUserPost = async (req, res) => {
     res.json(result)
 }
 
-module.exports.updatePostByComment=async(req,res)=>{
+module.exports.updatePostByComment = async (req, res) => {
     const { id } = req.params;
-    const {commentId} = req.body;
+    const { commentId } = req.body;
     const objectId = new ObjectId(id);
     const filter = { _id: objectId }
     const updateQuery = { $push: { comments: commentId } };
     const option = { upsert: false }
-    let result = await postCollection.updateOne(filter, updateQuery, option);
+    const result = await postCollection.updateOne(filter, updateQuery, option);
     res.send(result);
 }
 
 
 module.exports.updatePostLike = async (req, res) => {
-    const {id} = req.params;
-    const {userId}=req.body;
-    const objectId = new ObjectId(id);
-    const filter = { _id: objectId }
-    const updateQuery = { $addToSet: { likes: userId } };
-    const option = { upsert: false }
-    const result = await postCollection.updateOne(filter, updateQuery, option)
-    res.json(result);
-}
+    const { id } = req.params;
+    const data = req.body;
+    if (data.like == 'true') {
+        const objectId = new ObjectId(id);
+        const filter = { _id: objectId }
+        const userId = data.userId;
+        const updateQuery = { $addToSet: { likes: userId } };
+        const option = { upsert: false }
+        const result = await postCollection.updateOne(filter, updateQuery, option)
+        res.json(result);
+    }
+    if (data.like == 'false') {
+        const objectId = new ObjectId(id);
+        const filter = { _id: objectId }
+        const userId = data.userId;
+        const updateQuery = { $pull: {likes:userId} };
+        const option = { upsert: false }
+        const result = await postCollection.updateOne(filter, updateQuery, option)
+        res.json(result);
+    }
 
-module.exports.deletePostLike = async (req, res) => {
-    const {id} = req.params;
-    const {userId}=req.body;
-    const objectId = new ObjectId(id);
-    const filter = { _id: objectId }
-    const deleteQuery = { $pull: { likes: userId } };
-    const result = await postCollection.updateOne(filter, deleteQuery);
-    res.json(result)
 }

@@ -12,6 +12,10 @@ postsRouter
 .route('/query')
 .get(postController.getPostByQuery)
 
+/* postsRouter
+.route('/:classId')
+.get(postController.getPostsByClassId) */
+
 postsRouter
 .route('/:id([0-9a-fA-F]{24})')
 .get(postController.getPostById)
@@ -24,8 +28,5 @@ postsRouter
 .route('/like/:id([0-9a-fA-F]{24})')
 .put(postController.updatePostLike)
 
-postsRouter
-.route('/unlike/:id([0-9a-fA-F]{24})')
-.delete(postController.deletePostLike)
 
 module.exports=postsRouter;
