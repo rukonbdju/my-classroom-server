@@ -1,9 +1,9 @@
 const { ObjectId } = require("mongodb");
 const database = require("../utilities/dbConnect");
 const postCollection = database.collection('posts')
+const classroomCollection=database.collection('classrooms')
 
 module.exports.getAllPosts = async (req, res) => {
-
     if (req.query.classId) {
         const filter = { classId: req.query.classId }
         const filteredResult = await postCollection.find(filter).toArray()
@@ -46,9 +46,21 @@ module.exports.getPostByQuery = async (req, res) => {
     }
 }
 
+module.exports.deletePost = async (req, res) => {
+    const { id, classId } = req.query;
+    const postQuery = { _id: new ObjectId(id) };
+    await postCollection.deleteOne(postQuery);
+    const update = { $pull: { posts: id } }
+    const classroomQuery = { _id: new ObjectId(classId) };
+    const result =await classroomCollection.updateOne(classroomQuery,update)
+    res.json(result)
+
+}
+
 module.exports.createUserPost = async (req, res) => {
-    const post = req.body;
-    const result = await postCollection.insertOne(post)
+    const postData = req.body;
+    postData.file = Buffer.from(postData.file, 'base64');
+    const result = await postCollection.insertOne(postData)
     res.json(result)
 }
 
@@ -80,7 +92,7 @@ module.exports.updatePostLike = async (req, res) => {
         const objectId = new ObjectId(id);
         const filter = { _id: objectId }
         const userId = data.userId;
-        const updateQuery = { $pull: {likes:userId} };
+        const updateQuery = { $pull: { likes: userId } };
         const option = { upsert: false }
         const result = await postCollection.updateOne(filter, updateQuery, option)
         res.json(result);

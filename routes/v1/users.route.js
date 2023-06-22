@@ -11,10 +11,7 @@ usersRouter
     .route('/:uid')
     .get(usersController.getUserByUid)
 usersRouter
-    .route('/created/:uid')
+    .route('/create/:uid')
     .put(usersController.updateUserByClassId)
-usersRouter
-    .route('/joined/:uid')
-    .put(usersController.updateJoinedUserByClassId)
 
 module.exports = usersRouter;

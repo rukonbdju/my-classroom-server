@@ -1,6 +1,7 @@
 const database = require("../utilities/dbConnect");
 
 const userCollection = database.collection('users')
+module.exports=userCollection;
 
 module.exports.getAllUsers = async (req, res) => {
     const result = await userCollection.find({}).toArray();
@@ -30,11 +31,11 @@ module.exports.updateUserByClassId = async (req, res) => {
     const result = await userCollection.updateOne(filter, updateQuery, option);
     res.send(result)
 }
- module.exports.updateJoinedUserByClassId = async (req, res) => {
+/*  module.exports.updateJoinedUserByClassId = async (req, res) => {
     const filter = { firebaseId: req.params.uid }
     const updateQuery = { $addToSet: { joined: req.body.id } };
     const option = { upsert: false }
     // Perform the update operation
     const result = await userCollection.updateOne(filter, updateQuery, option);
     res.send(result)
-} 
+}  */

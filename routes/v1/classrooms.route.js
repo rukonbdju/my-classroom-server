@@ -19,7 +19,14 @@ classroomsRouter
 
 classroomsRouter
   .route('/join/:code')
-  .put(classroomsController.updateClassroomByUserId)
+  .put(classroomsController.joinClassroom)
+
+classroomsRouter
+  .route('/leave/:id([0-9a-fA-F]{24})')
+  .put(classroomsController.leaveClassroom)
+classroomsRouter
+  .route('/archive/:id([0-9a-fA-F]{24})')
+  .put(classroomsController.archiveClassroom)
 
 
 
