@@ -4,13 +4,13 @@ const database = require("../utilities/dbConnect");
 const commentCollection = database.collection('comments')
 const postCollection = database.collection('posts')
 
+//save new comment
 module.exports.saveComment = async (req, res) => {
     try {
         const data = req.body;
-        const postId=data.postId;
+        const postId = data.postId;
         const result = await commentCollection.insertOne(data)
         const commentId = result.insertedId.toString()
-        console.log(commentId)
         const objectId = new ObjectId(postId);
         const filter = { _id: objectId }
         const updateQuery = { $push: { comments: commentId } };
@@ -20,13 +20,17 @@ module.exports.saveComment = async (req, res) => {
     } catch (error) {
         console.log(error)
     }
-
 }
 
+//get comment by post id
 module.exports.getComment = async (req, res) => {
-    const { id } = req.params;
-    const objectId = new ObjectId(id);
-    const filter = { _id: objectId };
-    const result = await commentCollection.findOne(filter);
-    res.json(result)
+    try {
+        const { id } = req.params;
+        const objectId = new ObjectId(id);
+        const filter = { _id: objectId };
+        const result = await commentCollection.findOne(filter);
+        res.json(result)
+    } catch (error) {
+        console.log(error)
+    }
 }
