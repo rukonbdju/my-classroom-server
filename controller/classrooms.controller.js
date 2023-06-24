@@ -105,7 +105,7 @@ module.exports.archiveClassroom= async(req,res)=>{
     //delete user info from classroom
     const objectId = new ObjectId(id);
     const filter = { _id: objectId };
-    const updateQuery={$set:data}
+    const updateQuery={$addToSet:{archived:data.userId}}
     const result = await classroomCollection.updateOne(filter,updateQuery)
     res.json(result)
 }
