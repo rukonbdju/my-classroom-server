@@ -9,7 +9,7 @@ module.exports.saveComment = async (req, res) => {
         const data = req.body;
         const postId=data.postId;
         const result = await commentCollection.insertOne(data)
-        const commentId = result.insertedId
+        const commentId = result.insertedId.toString()
         console.log(commentId)
         const objectId = new ObjectId(postId);
         const filter = { _id: objectId }
