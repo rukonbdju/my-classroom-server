@@ -1,7 +1,5 @@
 const { ObjectId } = require("mongodb");
-const database = require("../utilities/dbConnect");
-const classroomCollection = database.collection('classrooms')
-const userCollection = database.collection('users')
+const {userCollection, classroomCollection}=require("../utilities/dbCollection")
 
 //get all classroom
 module.exports.getAllClassrooms = async (req, res) => {

@@ -1,8 +1,5 @@
 const { ObjectId } = require("mongodb");
-const database = require("../utilities/dbConnect");
-
-const commentCollection = database.collection('comments')
-const postCollection = database.collection('posts')
+const {commentCollection,postCollection}=require("../utilities/dbCollection")
 
 //save new comment
 module.exports.saveComment = async (req, res) => {

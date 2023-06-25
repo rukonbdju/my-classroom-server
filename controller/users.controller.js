@@ -1,7 +1,4 @@
-const database = require("../utilities/dbConnect");
-
-const userCollection = database.collection('users')
-module.exports = userCollection;
+const {userCollection}=require("../utilities/dbCollection")
 
 //get all user
 module.exports.getAllUsers = async (req, res) => {
