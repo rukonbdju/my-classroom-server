@@ -29,7 +29,7 @@ module.exports.createClassroom = async (req, res) => {
 module.exports.getClassroomsByUid = async (req, res) => {
     try {
         const uid = req.params.uid;
-        const filter = { creator: uid }
+        const filter = { "author.id":uid }
         const cursor = await classroomCollection.find(filter).toArray()
         res.json(cursor)
     } catch (error) {

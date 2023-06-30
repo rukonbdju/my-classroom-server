@@ -18,10 +18,6 @@ postsRouter
 .get(postController.getPostById)
 
 postsRouter
-.route('/comment/:id([0-9a-fA-F]{24})')
-.put(postController.updatePostByComment)
-
-postsRouter
 .route('/like/:id([0-9a-fA-F]{24})')
 .put(postController.updatePostLike)
 

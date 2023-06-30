@@ -12,7 +12,8 @@ module.exports.saveComment = async (req, res) => {
         const filter = { _id: objectId }
         const updateQuery = { $push: { comments: commentId } };
         const option = { upsert: false }
-        const result2 = await postCollection.updateOne(filter, updateQuery, option);
+        let result2 = await postCollection.updateOne(filter, updateQuery, option);
+        result2.commentId=commentId
         res.json(result2)
     } catch (error) {
         console.log(error)
@@ -28,6 +29,23 @@ module.exports.getComment = async (req, res) => {
         const result = await commentCollection.findOne(filter);
         res.json(result)
     } catch (error) {
+        console.log(error)
+    }
+}
+
+module.exports.deleteComment = async (req,resp)=>{
+    try{
+        const { id } = req.params;
+        const {postId}=req.body;
+        const objectId = new ObjectId(id);
+        const filter = { _id: objectId };
+        const res= await commentCollection.deleteOne(filter)
+        const update = { $pull: { comments: id } }
+        const postQuery = { _id: new ObjectId(postId) };
+        let result = await postCollection.updateOne(postQuery, update)
+        result.commentId=id;
+        resp.send(result)
+    }catch (error){
         console.log(error)
     }
 }

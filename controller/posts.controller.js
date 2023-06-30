@@ -82,28 +82,21 @@ module.exports.deletePost = async (req, res) => {
 module.exports.createUserPost = async (req, res) => {
     try {
         const postData = req.body;
-        const result = await postCollection.insertOne(postData)
+        const postResult = await postCollection.insertOne(postData)
+        const postId=postResult.insertedId.toString();
+        const classId=postData.classId;
+        const objectId = new ObjectId(classId);
+        const filter = { _id: objectId };
+        const updateQuery = { $addToSet: { posts: postId } };
+        const option = { upsert: false }
+        let result = await classroomCollection.updateOne(filter, updateQuery, option);
+        result.postId=postId;
         res.json(result)
     } catch (error) {
-        console.log(error)
+        res.json({error:'Error'})
     }
 }
 
-//update a an array field named comments by comment id
-module.exports.updatePostByComment = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const { commentId } = req.body;
-        const objectId = new ObjectId(id);
-        const filter = { _id: objectId }
-        const updateQuery = { $push: { comments: commentId } };
-        const option = { upsert: false }
-        const result = await postCollection.updateOne(filter, updateQuery, option);
-        res.send(result);
-    } catch (error) {
-        console.log(error)
-    }
-}
 
 //update like and dislike
 module.exports.updatePostLike = async (req, res) => {
