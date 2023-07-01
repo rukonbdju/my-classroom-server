@@ -1,10 +1,11 @@
 const express = require("express");
 const usersController = require("../../controller/users.controller");
+const verifyJWT = require("../../midleware/verifyJWT");
 const usersRouter = express.Router();
 
 usersRouter
     .route('/')
-    .get(usersController.getAllUsers)
+    .get(verifyJWT,usersController.getAllUsers)
     .post(usersController.postUser)
 
 usersRouter
