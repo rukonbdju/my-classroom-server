@@ -1,5 +1,5 @@
 const { ObjectId } = require("mongodb");
-const {classroomCollection, postCollection}=require("../utilities/dbCollection")
+const {classroomCollection, postCollection, commentCollection}=require("../utilities/dbCollection")
 
 //get all posts
 module.exports.getAllPosts = async (req, res) => {
@@ -72,6 +72,7 @@ module.exports.deletePost = async (req, res) => {
         const update = { $pull: { posts: id } }
         const classroomQuery = { _id: new ObjectId(classId) };
         const result = await classroomCollection.updateOne(classroomQuery, update)
+        await commentCollection.deleteMany({postId:id})
         res.json(result)
     } catch (error) {
         console.log(error)

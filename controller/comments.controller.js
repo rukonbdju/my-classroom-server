@@ -20,13 +20,11 @@ module.exports.saveComment = async (req, res) => {
     }
 }
 
-//get comment by post id
-module.exports.getComment = async (req, res) => {
+//get comments by post id
+module.exports.getComments = async (req, res) => {
     try {
-        const { id } = req.params;
-        const objectId = new ObjectId(id);
-        const filter = { _id: objectId };
-        const result = await commentCollection.findOne(filter);
+        const { postId } = req.query;
+        const result = await commentCollection.find({postId}).toArray();
         res.json(result)
     } catch (error) {
         console.log(error)

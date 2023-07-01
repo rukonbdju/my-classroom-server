@@ -4,11 +4,11 @@ const commentController =require('../../controller/comments.controller')
 
 commentRouter
 .route('/')
+.get(commentController.getComments)
 .post(commentController.saveComment)
 
 commentRouter
 .route('/:id([0-9a-fA-F]{24})')
-.get(commentController.getComment)
 .delete(commentController.deleteComment)
 
 module.exports=commentRouter;
