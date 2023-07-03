@@ -1,30 +1,29 @@
 const { ObjectId } = require("mongodb");
-const {classroomCollection, postCollection, commentCollection}=require("../utilities/dbCollection")
+const { classroomCollection, postCollection, commentCollection } = require("../utilities/dbCollection")
 
 //get all posts
 module.exports.getAllPosts = async (req, res) => {
     try {
-        if (req.query.classId) {
-            const filter = { classId: req.query.classId }
-            const filteredResult = await postCollection.find(filter).toArray()
-            res.json(filteredResult.reverse())
+        const { classId } = req.query;
+        console.log(req.query)
+        if (classId) {
+            const filteredResult = (await postCollection.find({ classId }).toArray()).reverse()
+            const totalData=filteredResult.length;
+            console.log(totalData)
+            const page = parseInt(req.query.page) || 1;
+            const pageSize = 5;
+            const startIndex = (page - 1) * pageSize;
+            let endIndex = startIndex + pageSize;
+            if (endIndex >= totalData) {
+                endIndex = totalData;
+            }
+            const results = filteredResult.slice(startIndex, endIndex);
+            res.json(results)
         }
         else {
             const result = await postCollection.find({}).toArray()
-            res.json(result.reverse())
+            res.json(result)
         }
-    } catch (error) {
-        console.log(error)
-    }
-}
-
-//get posts filter by specific classroom id
-module.exports.getPostsByClassId = async (req, res) => {
-    try {
-        const { classId } = req.params;
-        const filter = { classId: classId }
-        const result = await postCollection.find(filter).toArray();
-        res.json(result)
     } catch (error) {
         console.log(error)
     }
@@ -72,7 +71,7 @@ module.exports.deletePost = async (req, res) => {
         const update = { $pull: { posts: id } }
         const classroomQuery = { _id: new ObjectId(classId) };
         const result = await classroomCollection.updateOne(classroomQuery, update)
-        await commentCollection.deleteMany({postId:id})
+        await commentCollection.deleteMany({ postId: id })
         res.json(result)
     } catch (error) {
         console.log(error)
@@ -84,17 +83,17 @@ module.exports.createUserPost = async (req, res) => {
     try {
         const postData = req.body;
         const postResult = await postCollection.insertOne(postData)
-        const postId=postResult.insertedId.toString();
-        const classId=postData.classId;
+        const postId = postResult.insertedId.toString();
+        const classId = postData.classId;
         const objectId = new ObjectId(classId);
         const filter = { _id: objectId };
         const updateQuery = { $addToSet: { posts: postId } };
         const option = { upsert: false }
         let result = await classroomCollection.updateOne(filter, updateQuery, option);
-        result.postId=postId;
+        result.postId = postId;
         res.json(result)
     } catch (error) {
-        res.json({error:'Error'})
+        res.json({ error: 'Error' })
     }
 }
 

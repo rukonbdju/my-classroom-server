@@ -12,7 +12,6 @@ postsRouter
 .route('/query')
 .get(postController.getPostByQuery)
 
-
 postsRouter
 .route('/:id([0-9a-fA-F]{24})')
 .get(postController.getPostById)
