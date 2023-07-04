@@ -9,6 +9,7 @@ commentRouter
 
 commentRouter
 .route('/:id([0-9a-fA-F]{24})')
+.put(commentController.replyComment)
 .delete(commentController.deleteComment)
 
 module.exports=commentRouter;
