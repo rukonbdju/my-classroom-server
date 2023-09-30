@@ -1,7 +1,6 @@
 const express = require("express");
 
 const classroomsController = require("../../controller/classrooms.controller");
-const verifyJWT = require("../../midleware/verifyJWT");
 const classroomsRouter = express.Router()
 
 classroomsRouter

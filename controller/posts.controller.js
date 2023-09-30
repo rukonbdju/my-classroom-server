@@ -5,11 +5,9 @@ const { classroomCollection, postCollection, commentCollection } = require("../u
 module.exports.getAllPosts = async (req, res) => {
     try {
         const { classId } = req.query;
-        console.log(req.query)
         if (classId) {
             const filteredResult = (await postCollection.find({ classId }).toArray()).reverse()
             const totalData=filteredResult.length;
-            console.log(totalData)
             const page = parseInt(req.query.page) || 1;
             const pageSize = 5;
             const startIndex = (page - 1) * pageSize;

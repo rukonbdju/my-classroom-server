@@ -15,6 +15,7 @@ module.exports.getAllClassrooms = async (req, res) => {
 module.exports.createClassroom = async (req, res) => {
     try {
         const classroom = req.body
+        console.log(classroom)
         const randomCode = Math.floor(Math.random() * 9000) + 1000;
         classroom.code = randomCode.toString();
         const result = await classroomCollection.insertOne(classroom)
