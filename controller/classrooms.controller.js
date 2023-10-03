@@ -1,5 +1,5 @@
 const { ObjectId } = require("mongodb");
-const {userCollection, classroomCollection}=require("../utilities/dbCollection");
+const { userCollection, classroomCollection } = require("../utilities/dbCollection");
 
 //get all classroom
 module.exports.getAllClassrooms = async (req, res) => {
@@ -15,7 +15,6 @@ module.exports.getAllClassrooms = async (req, res) => {
 module.exports.createClassroom = async (req, res) => {
     try {
         const classroom = req.body
-        console.log(classroom)
         const randomCode = Math.floor(Math.random() * 9000) + 1000;
         classroom.code = randomCode.toString();
         const result = await classroomCollection.insertOne(classroom)
@@ -30,9 +29,28 @@ module.exports.createClassroom = async (req, res) => {
 module.exports.getClassroomsByUid = async (req, res) => {
     try {
         const uid = req.params.uid;
-        const filter = { "author.id":uid }
+        const filter = { "author.id": uid }
         const cursor = await classroomCollection.find(filter).toArray()
         res.json(cursor)
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+//get joined classrooms of a user by an array of classroom id
+module.exports.getJoinedClassrooms = async (req, res) => {
+    try {
+        let classroomIds=JSON.parse(req.headers.query);
+        classroomIds=classroomIds.ids
+        let joinedClassrooms = []
+        for (const id of classroomIds) {
+            const objectId = new ObjectId(id);
+            const query = { _id: objectId };
+            const cursor = await classroomCollection.findOne(query);
+            joinedClassrooms.push(cursor)
+        }
+        res.json(joinedClassrooms)
+
     } catch (error) {
         console.log(error)
     }

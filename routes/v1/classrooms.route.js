@@ -11,6 +11,10 @@ classroomsRouter
 classroomsRouter
   .route('/find/:uid')
   .get(classroomsController.getClassroomsByUid)
+  
+classroomsRouter
+  .route('/joinedClassrooms')
+  .get(classroomsController.getJoinedClassrooms)
 
 classroomsRouter
   .route('/:id([0-9a-fA-F]{24})')
