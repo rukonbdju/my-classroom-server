@@ -1,12 +1,6 @@
-## This is a classroom app
-
-#### live-link: https://my-classroom-bd.web.app
-
-#### Client Side Code: https://github.com/rukonbdju/my-classroom-client
-
 # 🎓 My Classroom Server
 
-**My Classroom Server** is the backend component of a comprehensive classroom management system. It facilitates seamless interactions between students and instructors, handling functionalities such as course management, assignments, and real-time communication.
+**My Classroom Server** is the backend component of a comprehensive classroom management system. It facilitates seamless interactions between students and instructors, handling functionalities such as course management, post in classroom, likes and comments.
 
 ## 🌐 Live Application
 
@@ -15,20 +9,17 @@
 
 ## 🚀 Features
 
-- **User Roles**: Differentiated access for students and instructors.
 - **Course Management**: Create, update, and manage courses and enrollments.
-- **Assignment Handling**: Instructors can post assignments; students can submit responses.
-- **Real-time Communication**: Enables instant messaging between users.
 - **Authentication**: Secure login and registration using JWT.
 - **RESTful API**: Structured endpoints for efficient frontend-backend communication.
 
 ## 🛠️ Technologies Used
 
 - **Backend**: Node.js, Express.js
-- **Database**: MongoDB with Mongoose ODM
+- **Database**: MongoDB
 - **Authentication**: JSON Web Tokens (JWT)
 - **Architecture**: MVC (Model-View-Controller)
-- **Deployment**: Hosted on Firebase
+- **Deployment**: Hosted on Render
 
 ## 📁 Project Structure
 
