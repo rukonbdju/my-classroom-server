@@ -32,14 +32,16 @@
 
 ## 📁 Project Structure
 
+```bash
 my-classroom-server/
-├── controller/ # Handles request logic
-├── middleware/ # Custom middleware functions
-├── routes/v1/ # API route definitions
-├── utilities/ # Helper functions and utilities
-├── index.js # Entry point of the application
-├── package.json # Project metadata and dependencies
-└── README.md # Project overview and documentation
+├── controller/        # Handles request logic
+├── middleware/        # Custom middleware functions
+├── routes/v1/         # API route definitions
+├── utilities/         # Helper functions and utilities
+├── index.js           # Entry point of the application
+├── package.json       # Project metadata and dependencies
+└── README.md          # Project overview and documentation
+
 
 ## 🧪 Getting Started
 
